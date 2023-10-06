@@ -17,11 +17,12 @@ const signupUser = async (obj) => {
 const loginUser = async (obj) => {
   try {
     const result = await axiox.post(`${url}/login`, obj);
-    console.warn(result);
+    // console.warn(result);
     if (result.data.status === 201) {
       return result.data;
     }
   } catch (error) {
+    console.log(error);
     return error.response.data;
   }
 };
@@ -33,7 +34,7 @@ const uploadImg = async (file, userId) => {
   formData.append("userId", userId);
   try {
     const result = await axiox.post(`${url}/upload`, formData);
-    console.warn(result);
+    // console.warn(result);
     if (result.data.status === 201) {
       return result.data;
     }
@@ -49,7 +50,7 @@ const savedImg = async (file, userId) => {
   formData.append("userId", userId);
   try {
     const result = await axiox.post(`${url}/saved`, formData);
-    console.warn(result);
+    // console.warn(result);
     if (result.data.status === 201) {
       return result.data;
     }

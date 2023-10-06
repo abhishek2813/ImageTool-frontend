@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Canvas from "../Canvas";
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import TextBox from "../TextBox";
 import ImageUpload from "../ImageUpload";
 import { savedImg, uploadImg } from "../actions";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import canvasToImage from "canvas-to-image";
 
 function Home() {
+  const [isLoading, setisLoading] = useState(true);
   const [canvasObj, setCanvasObj] = useState([]);
   const [stageDataURL, setStageDataURL] = useState(null);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-
+  
   //check user exit or not
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("user"));
@@ -22,6 +22,10 @@ function Home() {
     }
     setUser(auth);
   }, [navigate]);
+
+  useEffect(()=>{
+    setisLoading(false)
+  },[])
   const addText = ({ text, fontSize, textColor }) => {
     if (!text.trim()) {
       toast.error("Please enter some text.");
@@ -44,8 +48,8 @@ function Home() {
     newImage.src = imageUrl;
     newImage.onload = () => {
       const imageToAdd = {
-        x: 250,
-        y: 250,
+        x: 50,
+        y: 50,
         image: newImage,
         width: newImage.naturalWidth,
         height: newImage.naturalHeight,
@@ -67,11 +71,13 @@ function Home() {
       a.href = stageDataURL;
       a.download = "canvas_image.png";
       a.click();
-      toast.success("Download.");
+      toast.success("Downloaded");
     }
+
   };
 
   const handleSave = async () => {
+    setisLoading(true)
     if (stageDataURL) {
       // Convert the canvas data to an image
       const canvas = document.createElement("canvas");
@@ -98,6 +104,7 @@ function Home() {
         uploadCanvasImage(canvasFile);
       };
     }
+    setisLoading(false)
   };
 
   const dataURLtoBlob = (dataURL) => {
@@ -113,14 +120,18 @@ function Home() {
   };
 
   const uploadCanvasImage = async (canvasFile) => {
+    setisLoading(true)
     try {
       const uploadFile = await savedImg(canvasFile, user.id);
       if (uploadFile.status === 201) {
+        setisLoading(false)
         toast.success(uploadFile.message);
       } else {
+        setisLoading(false)
         toast.error(uploadFile.error);
       }
     } catch (error) {
+      setisLoading(false)
       toast.error("An error occurred while uploading the canvas image.");
     }
   };
@@ -132,6 +143,7 @@ function Home() {
     <div>
       <Container>
         <Row>
+        <h1 className="display-1 text-center">{isLoading && <Spinner animation="border" variant="primary" />}</h1>
           <Col lg={6} md={12} sm={12} xs={12}>
             <div className="my-3 shadow p-3 mb-5 bg-white rounded">
               <Card>

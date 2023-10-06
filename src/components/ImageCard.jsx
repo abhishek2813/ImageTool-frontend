@@ -21,7 +21,7 @@ function ImageCard({ data }) {
             src={`${process.env.REACT_APP_API_URL}/Images/${data.image}`}
           />
           <Card.Body>
-            <Button variant="primary" onClick={handleDownload}>
+            <Button variant="primary" onClick={handleDownload} size="sm">
               Download
             </Button>
           </Card.Body>

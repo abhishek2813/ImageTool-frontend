@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { uploadFetchImg } from "../actions";
 import { toast } from "react-toastify";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row, Spinner } from "react-bootstrap";
 import ImageCard from "../ImageCard";
 import nodata from "../assets/nodata.jpg";
 
 function UploadImages() {
+  const [isLoading, setisLoading] = useState(true);
   const [images, setImages] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
@@ -24,21 +25,23 @@ function UploadImages() {
       }
     };
     fetchData();
+    setisLoading(false)
   }, []);
   
   return (
     <div>
       <Container fluid>
         <Row>
-          {images.length!=0 ?
+        <h1 className="display-1 text-center">{isLoading && <Spinner animation="border" variant="primary" />}</h1>
+          {images.length!==0 ?
             images.map((item) => (
-              <Col xs={4} lg={4} key={item._id} className="mb-3">
+              <Col lg={4} md={4} sm={6} xs={6}  key={item._id} className="mb-3">
                 <div className="shadow p-3 bg-white rounded">
                   <ImageCard data={item} />
                 </div>
               </Col>
             )) :
-            <Col xs={{span:6,offset:3}} lg={4} className="my-5 shadow bg-white rounded">
+            <Col lg={6} md={6} sm={12} xs={10} className="my-5 shadow bg-white rounded">
               <h1>No Data</h1>
                <img src={nodata} alt="no-data" className="w-100" />
             </Col>

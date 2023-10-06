@@ -26,7 +26,7 @@ const Canvas = ({ canvasObj, onCanvasRender }) => {
   }, [canvasObj, onCanvasRender]);
   return (
     <Container>
-      <Stage width={550} height={800} ref={stageRef}>
+      <Stage width={500} height={800} ref={stageRef}>
         <Layer>
           {canvasObj.map((object, index) => {
             if (object.type === "text") {
